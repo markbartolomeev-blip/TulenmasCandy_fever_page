@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новогодняя мини-игра</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a2e38 0%, #1a5f7a 100%);
+            font-family: 'Arial Black', 'Arial Bold', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Снежинки */
+        .snowflake {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.4;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-size: 24px;
+            color: #ffcc00;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+        }
+
+        #codeInput {
+            width: 200px;
+            padding: 15px;
+            font-size: 24px;
+            text-align: center;
+            font-weight: bold;
+            border: 3px solid #ffcc00;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #0a2e38;
+            letter-spacing: 4px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #codeInput:focus {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+        }
+
+        #message {
+            min-height: 30px;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .success {
+            color: #4cff00;
+            text-shadow: 0 0 10px rgba(76, 255, 0, 0.5);
+            background: rgba(76, 255, 0, 0.1);
+            border: 2px solid #4cff00;
+        }
+
+        .error {
+            color: #ff3333;
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+            background: rgba(255, 51, 51, 0.1);
+            border: 2px solid #ff3333;
+        }
+
+        .link-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff3366, #ff9933);
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
+        }
+
+        .link-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 51, 102, 0.6);
+        }
+
+        .new-year-decoration {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Декоративные елочные шары */
+        .ornament {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            z-index: 5;
+        }
+
+        .ornament-1 { top: 10%; left: 10%; background: #ff3366; }
+        .ornament-2 { top: 10%; right: 10%; background: #33ff66; }
+        .ornament-3 { bottom: 10%; left: 10%; background: #3366ff; }
+        .ornament-4 { bottom: 10%; right: 10%; background: #ffcc00; }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            #codeInput {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Декоративные елочные шары -->
+    <div class="ornament ornament-1"></div>
+    <div class="ornament ornament-2"></div>
+    <div class="ornament ornament-3"></div>
+    <div class="ornament ornament-4"></div>
+
+    <div class="container">
+        <div class="new-year-decoration">🎄</div>
+        <h1>Введите, пожалуйста, ваш код для принятия участия в мини-игре</h1>
+        
+        <div class="input-group">
+            <div class="label">id:</div>
+            <input 
+                type="text" 
+                id="codeInput" 
+                maxlength="4" 
+                pattern="\d{4}" 
+                placeholder="0000"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+            >
+        </div>
+        
+        <div id="message"></div>
+        <a id="linkButton" class="link-button" style="display: none;" target="_blank">Перейти к заданию</a>
+    </div>
+
+    <script>
+        // База данных кодов и ссылок
+        const codes = {
+            '0001': 'https://markbartolomeev-blip.github.io/Challenge_1/',
+            '4567': 'https://markbartolomeev-blip.github.io/Challenge_2/',
+            '3125': 'https://markbartolomeev-blip.github.io/Challenge_5/',
+            '5623': 'https://markbartolomeev-blip.github.io/Challenge_3/',
+            '7777': 'https://markbartolomeev-blip.github.io/Challenge_2/'
+        };
+
+        // Получаем элементы
+        const codeInput = document.getElementById('codeInput');
+        const message = document.getElementById('message');
+        const linkButton = document.getElementById('linkButton');
+
+        // Функция проверки кода
+        function checkCode() {
+            const inputValue = codeInput.value.trim();
+            
+            // Очищаем предыдущее сообщение
+            message.textContent = '';
+            message.className = '';
+            linkButton.style.display = 'none';
+
+            // Проверяем длину
+            if (inputValue.length !== 4) {
+                return;
+            }
+
+            // Проверяем код
+            if (codes[inputValue]) {
+                // Успешный ввод
+                message.textContent = '✅ Код принят! Нажмите на кнопку ниже';
+                message.className = 'success';
+                
+                // Показываем кнопку со ссылкой
+                linkButton.href = codes[inputValue];
+                linkButton.style.display = 'inline-block';
+                linkButton.textContent = `Перейти`;
+                
+                // Добавляем визуальный эффект
+                codeInput.style.borderColor = '#4cff00';
+                codeInput.style.boxShadow = '0 0 20px rgba(76, 255, 0, 0.5)';
+            } else {
+                // Неправильный код
+                message.textContent = '❌ Ошибка: неверный код';
+                message.className = 'error';
+                
+                // Эффект ошибки
+                codeInput.style.borderColor = '#ff3333';
+                codeInput.style.boxShadow = '0 0 20px rgba(255, 51, 51, 0.5)';
+                
+                // Автоматически сбрасываем через 2 секунды
+                setTimeout(() => {
+                    codeInput.style.borderColor = '#ffcc00';
+                    codeInput.style.boxShadow = 'none';
+                }, 2000);
+            }
+        }
+
+        // Слушатель событий для input
+        codeInput.addEventListener('input', function() {
+            // Проверяем код при вводе 4 цифр
+            if (this.value.length === 4) {
+                checkCode();
+            } else {
+                // Сбрасываем сообщение, если изменили код
+                message.textContent = '';
+                message.className = '';
+                linkButton.style.display = 'none';
+                codeInput.style.borderColor = '#ffcc00';
+                codeInput.style.boxShadow = 'none';
+            }
+        });
+
+        // Слушатель для клавиши Enter
+        codeInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && this.value.length === 4) {
+                checkCode();
+            }
+        });
+
+        // Создание снежинок
+        function createSnowflakes() {
+            const snowflakesContainer = document.body;
+            
+            for (let i = 0; i < 50; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                
+                // Случайный размер
+                const size = Math.random() * 5 + 3;
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                
+                // Начальная позиция
+                snowflake.style.left = `${Math.random() * 100}%`;
+                snowflake.style.top = `${Math.random() * 100}%`;
+                
+                // Случайная прозрачность
+                snowflake.style.opacity = Math.random() * 0.6 + 0.3;
+                
+                // Анимация
+                const duration = Math.random() * 10 + 10;
+                const delay = Math.random() * 5;
+                
+                snowflake.style.animation = `
+                    fall ${duration}s linear ${delay}s infinite,
+                    sway ${duration / 2}s ease-in-out ${delay}s infinite alternate
+                `;
+                
+                snowflakesContainer.appendChild(snowflake);
+            }
+        }
+
+        // Добавляем CSS для анимации снежинок
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                0% {
+                    transform: translateY(-100px) rotate(0deg);
+                }
+                100% {
+                    transform: translateY(100vh) rotate(360deg);
+                }
+            }
+            
+            @keyframes sway {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(20px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Инициализация снежинок
+        createSnowflakes();
+
+        // Фокус на поле ввода при загрузке
+        window.addEventListener('load', () => {
+            codeInput.focus();
+        });
+    </script>
+</body>
+</html>
